@@ -1,4 +1,5 @@
 import json
+import pandas as pd
 import requests as rq
 import pprint
 
@@ -18,17 +19,28 @@ class VkApi:
             }
     
     def download(self, owner_id=None):
+        ava_df = pd.DataFrame()
         download_url = self.url + 'photos.get'
         download_params = {
             'owner_id': owner_id, # если не объявлен дополнительно, определит по владельцу токена
             'album_id': 'profile', # служебный альбом, только авы
             # 'photo_sizes': '', разобраться,
-            'count': 1,
+            'count': 3,
             'extended': 1            
             }
         req = rq.get(download_url, params={**self.params, **download_params}).json()
-        return req
-        # requests.get(group_search_url, params={**params, **group_search_params}).json()
+        # Тут нужен цикл, чтобы добавлять в датафрейм строки с ссылкой на 
+        # максимальный размер фото (тип W)
+        ava_df = pd.DataFrame(req['response']['items'][0]['sizes'])
+        print(req)
+        return ava_df
+
+
 
 get_ava = VkApi(vk_token)
-print(get_ava.download())
+print(get_ava.download()) # Сёма - 34872912
+# ava_df = pd.concat([ava_df, pd.DataFrame(get_ava['response']['items'])])
+
+# print(ava_df)
+
+
