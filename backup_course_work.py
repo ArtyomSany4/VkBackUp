@@ -29,10 +29,20 @@ class VkApi:
             'extended': 1            
             }
         req = rq.get(download_url, params={**self.params, **download_params}).json()
-        # Тут нужен цикл, чтобы добавлять в датафрейм строки с ссылкой на 
-        # максимальный размер фото (тип W)
+        # Цикл для перебора типов размеров фото
+        # Создать список с размерами фото из доки апи
+        # Итерироваться по элементам этого списка, элемент передавать в if ТУТЬ in el_size['type']:
+        for el in req['response']['items']: 
+            for el_size in el['sizes']:
+                print(el_size['type'])
+                if 's' in el_size['type']:
+                    print(el_size['url'])  
+                    print()
+            # print(el)
+            
+
         ava_df = pd.DataFrame(req['response']['items'][0]['sizes'])
-        print(req)
+        # print(req)
         return ava_df
 
 
