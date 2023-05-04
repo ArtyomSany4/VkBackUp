@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 import requests as rq
+import pprint as pp
 
 # Получаем токены из файликов
 with open('vk_token.txt', 'r') as vk_token_file:
@@ -30,34 +31,28 @@ class VkPhotosGet:
         download_params = {
             'owner_id': owner_id, # если не объявлен дополнительно, определит по владельцу токена
             'album_id': 'profile', # служебный альбом, только авы
-            # 'photo_sizes': '', разобраться,
             'count': 10,
-            'extended': 1            
+            'extended': 1       # респ возвращает доп поля, в частности likes     
             }
         req = rq.get(download_url, params={**self.params, **download_params}).json()
-        for_logs = []
-        max_photo_dict = {} # Словарь кол-во лайков: урл на макстип фото
+        for_ya_list = []
+        
         # Цикл для выбора максимальной фотки
         for item in req['response']['items']:
-            # max_photo_size = pd.DataFrame([max(item['sizes'], key=lambda x: vk_photo_types[x["type"]])])
-            max_photo_size = max(item['sizes'], key=lambda x: vk_photo_types[x["type"]])
-            for_logs.append({'file_name': item['likes']['count'], 'type': max_photo_size['type']}) # откуда-то берется ноль для типа фото
-            # print(max_photo_size)
-            print()
-            print()
-            print(for_logs)     
-
-
-        # ava_df = pd.DataFrame(req['response']['items'][0]['sizes'])
-        # print(req)
-        # return ava_df
+            max_photo_size = max(item['sizes'], key=lambda x: vk_photo_types[x['type']])
+            for_ya_list.append({'url': max_photo_size['url'], 
+                                'type': max_photo_size['type'], 
+                                'likes': item['likes']['count'],
+                                'id': item['id']
+                                })
+        return for_ya_list
 
 
 
 get_ava = VkPhotosGet(vk_token)
-print(get_ava.get_url()) # Сёма - 34872912
-# ava_df = pd.concat([ava_df, pd.DataFrame(get_ava['response']['items'])])
+pp.pprint(get_ava.get_url())  # Сёма - 34872912
 
 # print(ava_df)
 
-
+# f'{directory}/{i["likes"]}_{datetime.now().strftime("%H-%M-%S")}.jpg'
+# f'photo["likes"]["count"]}_{photo["date"]}.jpg'
