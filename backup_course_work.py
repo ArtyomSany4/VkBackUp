@@ -1,5 +1,3 @@
-import json
-import pandas as pd
 import requests as rq
 import pprint as pp
 
@@ -31,7 +29,7 @@ class VkPhotosGet:
         download_params = {
             'owner_id': owner_id, # если не объявлен дополнительно, определит по владельцу токена
             'album_id': 'profile', # служебный альбом, только авы
-            'count': 10,
+            'count': 3,
             'extended': 1       # респ возвращает доп поля, в частности likes     
             }
         req = rq.get(download_url, params={**self.params, **download_params}).json()
@@ -43,14 +41,15 @@ class VkPhotosGet:
             for_ya_list.append({'url': max_photo_size['url'], 
                                 'type': max_photo_size['type'], 
                                 'likes': item['likes']['count'],
-                                'id': item['id']
+                                'id': item['id'],
+                                'date': item['date']
                                 })
         return for_ya_list
 
 
 
-get_ava = VkPhotosGet(vk_token)
-pp.pprint(get_ava.get_url())  # Сёма - 34872912
+# get_ava = VkPhotosGet(vk_token)
+# pp.pprint(get_ava.get_url())  # Сёма - 34872912
 
 # print(ava_df)
 
