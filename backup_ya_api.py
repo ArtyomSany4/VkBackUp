@@ -1,7 +1,9 @@
 import requests as rq
+# import urllib, urllib3
+# import urllib.request as ur
 
-with open('ya_token.txt', 'r') as ya_token_file:
-    ya_token = ya_token_file.read().strip()
+# with open('ya_token.txt', 'r') as ya_token_file:
+#     ya_token = ya_token_file.read().strip()
 
 # ya_token = ''
     
@@ -9,7 +11,7 @@ class YaUploader:
     def __init__(self, ya_token: str):
         self.token = ya_token
 
-    def get_headers(self):
+    def get_headers(self): 
         return {
             'Content-Type': 'application/json',
             'Authorization': 'OAuth {}'.format(self.token)
@@ -22,24 +24,22 @@ class YaUploader:
         create_resp = rq.put(create_folder_url, headers=headers, params=params)
         return create_resp.json()
     
-    def get_upload_link(self, path_on_yadisk):
+    def get_upload_link(self, folder_name):
         method_url = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
         headers = self.get_headers()
-        params = {'path': path_on_yadisk, 'overwrite': 'true'}
+        params = {'path': folder_name, 'overwrite': 'true'}
         response = rq.get(method_url, headers=headers, params=params)
         # print('гет аплоад', response['href'])
+        print('get_upload_link', response)
         return response.json()
 
-    def upload(self, photo_url, filename, folder_name='VK_PHOTO_BACKUP'):
+    def upload(self, photo_url, filename, folder_name='disk/VK_PHOTO_BACKUP'):
         # href = self.get_upload_link(path_to_file=path_to_file).get('href', '')
+        headers = self.get_headers()
+        params = {'path': '2/img.jpg', 'url': photo_url}
         photo_url = photo_url
-        folder_name = folder_name
-        upload_link = self.get_upload_link(folder_name)['href']
-        print(photo_url)
-        print(folder_name)
-        print(upload_link)
-        print()
-        response = rq.put(upload_link, data=open(photo_url, 'rb'))
+        upload_link = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
+        response = rq.post(url=upload_link, params=params, headers=headers)
         return response
         
         # response.raise_for_status()

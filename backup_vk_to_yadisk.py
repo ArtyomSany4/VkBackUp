@@ -21,14 +21,14 @@ folder_name = input('Введите имя папки: ')
 # print(path_on_yadisk)
 
 # Получаем список фоток для загрузки
-for_ya_list = vk.VkPhotosGet(vk_token)
+for_ya_list = vk.VkPhotosGet(vk_token) # прикрутить ввод айдишника
 
 # Цикл для каждой фотки
 for el in for_ya_list.get_url():
     date = datetime.utcfromtimestamp(el["date"]).strftime("%Y-%m-%d %H_%M_%S")
-    filename = f'{el["likes"]}_05.jpg'
+    filename = f'{el["likes"]}_{date}.jpg'
     photo_url = el['url']
-    f_to_upload = bya.YaUploader(ya_token) # хз, зачем это
+    f_to_upload = bya.YaUploader(ya_token) 
     f_to_upload.upload(photo_url, filename, folder_name)
     # print(ya_token)
     print()
