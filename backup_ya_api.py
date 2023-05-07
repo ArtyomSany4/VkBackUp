@@ -1,11 +1,4 @@
 import requests as rq
-# import urllib, urllib3
-# import urllib.request as ur
-
-# with open('ya_token.txt', 'r') as ya_token_file:
-#     ya_token = ya_token_file.read().strip()
-
-# ya_token = ''
     
 class YaUploader:
     def __init__(self, ya_token: str):
@@ -33,10 +26,10 @@ class YaUploader:
         print('get_upload_link', response)
         return response.json()
 
-    def upload(self, photo_url, filename, folder_name='disk/VK_PHOTO_BACKUP'):
+    def upload(self, photo_url, filename, folder_name='VK_PHOTO_BACKUP'):
         # href = self.get_upload_link(path_to_file=path_to_file).get('href', '')
         headers = self.get_headers()
-        params = {'path': '2/img.jpg', 'url': photo_url}
+        params = {'path': folder_name+'/'+filename, 'url': photo_url}
         photo_url = photo_url
         upload_link = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
         response = rq.post(url=upload_link, params=params, headers=headers)
@@ -47,4 +40,3 @@ class YaUploader:
         #     print('Загрузка успешно завершена')
         # if response.status_code == 201:
         #     print('Файл успешно отправлен на загрузку')
-# print('тестовый принт', YaUploader(ya_token).create_folder())
