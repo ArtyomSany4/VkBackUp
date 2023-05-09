@@ -19,10 +19,17 @@ if len(folder_name) == 0:
 path_on_yadisk = bya.YaUploader(ya_token).create_folder(folder_name)
 
 # Получаем список фоток для загрузки
-for_ya_list = vk.VkPhotosGet(vk_token) # прикрутить ввод айдишника
-upload_log = []
+owner_id = input('Укажите ИД пользователя: ')
+if len(owner_id) == 0:
+    owner_id = None
+for_ya_list = vk.VkPhotosGet(vk_token)
+photo_count = input('Укажите количество фотографий для сохранения: ')
+if len(photo_count) == 0:
+    photo_count = 5
+
+upload_log = [] # Пустой список, в него собираем инфу для лога
 # Цикл для каждой фотки
-for el in for_ya_list.get_url():
+for el in for_ya_list.get_url(photo_count, owner_id):
     date = datetime.utcfromtimestamp(el["date"]).strftime("%Y-%m-%d %H_%M_%S")
     filename = f'{el["likes"]}_{date}.jpg'
     photo_url = el['url']
@@ -37,5 +44,3 @@ for el in for_ya_list.get_url():
 # Экспортируем лог в json файл
 with open('backup_log_file.json', 'w') as f:
     json.dump(upload_log, f)
-
-print(upload_log)

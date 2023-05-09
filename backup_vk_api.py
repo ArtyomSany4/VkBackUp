@@ -21,7 +21,7 @@ class VkPhotosGet:
             'v':'5.131'
             }
     
-    def get_url(self, owner_id=None):
+    def get_url(self, count, owner_id=None):
         vk_photo_types = {
             'w': 10, 'z': 9, 'y': 8, 'r': 7, 'q': 6, 'p': 5, 'o': 4, 'x':3, 'm': 2, 's': 1}        
         # ava_df = pd.DataFrame()
@@ -29,9 +29,10 @@ class VkPhotosGet:
         download_params = {
             'owner_id': owner_id, # если не объявлен дополнительно, определит по владельцу токена
             'album_id': 'profile', # служебный альбом, только авы
-            'count': 3,
+            'count': count,
             'extended': 1       # респ возвращает доп поля, в частности likes     
             }
+        print(count)
         req = rq.get(download_url, params={**self.params, **download_params}).json()
         for_ya_list = []
         
